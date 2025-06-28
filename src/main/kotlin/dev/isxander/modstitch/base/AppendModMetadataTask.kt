@@ -11,6 +11,9 @@ abstract class AppendModMetadataTask : SourceTask() {
     @get:Input
     abstract val mixins: ListProperty<FinalMixinConfigurationSettings>
 
+    @get:Input
+    abstract val accessWideners: ListProperty<String>
+
     @TaskAction
     fun run() = source.visit { appendModMetadata(file) }
 
