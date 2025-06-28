@@ -7,15 +7,28 @@ import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
+/**
+ * A Gradle task that appends metadata entries to the provided mod manifest file(s).
+ */
 abstract class AppendModMetadataTask : SourceTask() {
+    /** A list of mixin configurations to be appended to the metadata. */
     @get:Input
     abstract val mixins: ListProperty<FinalMixinConfigurationSettings>
 
+    /** A list of access widener file paths to be included in the metadata. */
     @get:Input
     abstract val accessWideners: ListProperty<String>
 
+    /**
+     * Appends metadata entries to the [source] file(s).
+     */
     @TaskAction
-    fun run() = source.visit { appendModMetadata(file) }
+    fun appendModMetadata() = source.visit { appendModMetadata(file) }
 
-    abstract fun appendModMetadata(file: File)
+    /**
+     * Appends metadata entries to the specified file.
+     *
+     * @param file The file to which metadata entries should be appended.
+     */
+    protected abstract fun appendModMetadata(file: File)
 }

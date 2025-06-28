@@ -7,6 +7,9 @@ import dev.isxander.modstitch.base.AppendModMetadataTask
 import dev.isxander.modstitch.util.Side
 import java.io.File
 
+/**
+ * A Gradle task that appends metadata entries to Fabric's `fabric.mod.json` files.
+ */
 abstract class AppendFabricMetadataTask : AppendModMetadataTask() {
     override fun appendModMetadata(file: File) {
         val gson = GsonBuilder().setPrettyPrinting().create()
@@ -23,14 +26,14 @@ abstract class AppendFabricMetadataTask : AppendModMetadataTask() {
             it.isJsonPrimitive && it.asJsonPrimitive.isString -> it.asString
             else -> it.toString()
         }}
-        mixins.get().forEach {
-            if (existingMixinConfigs.contains(it.config)) {
-                return@forEach
+        for (mixin in mixins.get()) {
+            if (existingMixinConfigs.contains(mixin.config)) {
+                continue
             }
 
             val mixinConfig = JsonObject()
-            mixinConfig.addProperty("config", it.config)
-            mixinConfig.addProperty("environment", when (it.side) {
+            mixinConfig.addProperty("config", mixin.config)
+            mixinConfig.addProperty("environment", when (mixin.side) {
                 Side.Both -> "*"
                 Side.Client -> "client"
                 Side.Server -> "server"
